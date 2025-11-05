@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BÌNH APK - Kho tải miễn phí</title>
+  <style>
+    body { font-family: Arial; background:#f3f3f3; text-align:center; }
+    .game { background:#fff; padding:15px; margin:10px auto; border-radius:10px; width:90%; max-width:400px; }
+    a.btn { display:inline-block; padding:10px 20px; background:#28a745; color:#fff; border-radius:5px; text-decoration:none; }
+  </style>
+</head>
+<body>
+  <h1>🎮 BÌNH APK 🎮</h1>
+  <p>Tải game miễn phí cho Android</p>
+
+  <div class="game">
+    <h2>Free Fire MAX v2.103.1</h2>
+    <p>Dung lượng: 800MB</p>
+    <a class="btn" href="https://www.mediafire.com/file/xxxx/FreeFireMAX.apk" target="_blank">Tải ngay</a>
+  </div>
+
+  <div class="game">
+    <h2>Liên Quân Mobile</h2>
+    <p>Dung lượng: 700MB</p>
+    <a class="btn" href="https://drive.google.com/uc?id=xxxxx&export=download" target="_blank">Tải ngay</a>
+  </div>
+
+  <footer>
+    <p>© 2025 BÌNH APK — Web tải game Android miễn phí</p>
+  </footer>
+</body>
+</html>        uses: actions/upload-pages-artifact@v3
+        with:
+          # Upload entire repository
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
