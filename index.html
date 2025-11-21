@@ -2,186 +2,224 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8" />
-  <title>MD5 Tài/Xỉu Analyzer</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Đăng Nhập Tài Xỉu</title>
   <style>
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: black;
+      background-color: #111;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
       overflow: hidden;
-      color: #00ffcc;
     }
-
     .container {
-      position: relative;
-      z-index: 2;
-      padding: 40px;
-      max-width: 500px;
-      margin: auto;
+      width: 90%;
+      max-width: 400px;
+      padding: 20px;
+      background-color: #1e1e1e;
+      border: 3px solid #00ffcc;
+      border-radius: 16px;
+      box-shadow: 0 0 25px #00ffcc;
       text-align: center;
     }
-
     h2 {
-      font-size: 28px;
-      text-shadow: 0 0 10px #00ffcc, 0 0 20px #00ffcc;
+      color: #00ffcc;
+      margin-bottom: 20px;
     }
-
-    input, button {
-      width: 100%;
+    input {
       padding: 12px;
-      margin: 10px 0;
+      width: 100%;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background-color: #222;
+      color: #eee;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 12px;
+      width: 100%;
       font-size: 16px;
       border: none;
-      border-radius: 5px;
-      outline: none;
-    }
-
-    input {
-      background: #111;
-      color: #00ffcc;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-
-    button {
-      background: #00ffcc;
-      color: black;
+      background-color: #00ffcc;
+      color: #000;
+      border-radius: 8px;
       font-weight: bold;
       cursor: pointer;
-      box-shadow: 0 0 15px #00ffcc;
-      transition: 0.3s;
+      margin-top: 5px;
     }
-
     button:hover {
-      background: #00ffaa;
-      box-shadow: 0 0 25px #00ffaa;
+      background-color: #00ddb8;
     }
-
-    .hidden { display: none; }
-
-    .output {
-      margin-top: 20px;
-      text-shadow: 0 0 10px #00ffcc;
+    .dice {
+      font-size: 50px;
+      margin: 20px 0 10px;
     }
-
-    /* Hiệu ứng ánh sáng chuyển động */
-    .bg-lights {
-      position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
-      background: radial-gradient(circle at 30% 30%, #00ffcc44, transparent 70%),
-                  radial-gradient(circle at 70% 70%, #00ffaa22, transparent 80%);
-      animation: moveBG 10s infinite linear;
-      z-index: 0;
+    .result {
+      font-size: 40px;
+      font-weight: bold;
+      color: #ffcc00;
+      text-shadow: 0 0 10px #ffcc00;
     }
-
-    @keyframes moveBG {
-      0% { background-position: 0 0, 100% 100%; }
-      50% { background-position: 100% 0, 0 100%; }
-      100% { background-position: 0 0, 100% 100%; }
+    #mainApp {
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
-  <div class="bg-lights"></div>
-
   <div class="container">
-    <h2>🔮 Giải mã MD5 - Dự đoán Tài/Xỉu</h2>
+    <h2>@NgMinhChi</h2>
 
-    <!-- Bước 1 -->
-    <div id="step1">
-      <input type="text" id="md5Input" placeholder="Nhập mã MD5..." />
-      <button onclick="solveMD5()">Giải MD5</button>
+    <div id="loginSection">
+      <input type="text" id="accessKey" placeholder="Nhập key truy cập" />
+      <button onclick="login()">Đăng Nhập</button>
     </div>
 
-    <!-- Bước 2 -->
-    <div id="step2" class="hidden">
-      <div id="md5Info" class="output"></div>
-      <input type="text" id="actualResult" placeholder="Nhập kết quả thực tế (tài/xỉu)" />
-      <input type="text" id="resultString" placeholder="Nhập chuỗi kết quả (VD: 3-4-5 hoặc {3-4-5})" />
-      <button onclick="analyze()">Hoàn tất phân tích</button>
+    <div id="mainApp" style="display: none;">
+      <h2>Hệ Thống Tài Xỉu</h2>
+      <input type="text" id="md5Input" placeholder="Nhập chuỗi MD5" />
+      <button onclick="traCuuMD5()">Dự Đoán</button>
+      <div class="dice" id="dice"></div>
+      <div class="result" id="result"></div>
+      <p id="expiryInfo"></p>
+      <button onclick="logout()">Đăng Xuất</button>
     </div>
-
-    <div id="output" class="output"></div>
   </div>
 
   <script>
-    let history = [], correct = 0, total = 0, wrongStreak = 0, adjustmentFactor = 0;
-    let lastPrediction = '', lastTai = 0, lastXiu = 0;
+    const keyStore = {
+      "keytest": { duration: 2 * 60 * 60 * 1000, name: "2 giờ" },
+      "key1daymchi": { duration: 24 * 60 * 60 * 1000, name: "1 ngày" },
+      "keylo1tuan": { duration: 7 * 24 * 60 * 60 * 1000, name: "1 tuần" },
+      "keyvinhvien": { duration: null, name: "Vĩnh viễn" }
+    };
 
-    function analyze_md5(md5, factor) {
-      let value = 0;
-      for (let i = 0; i < md5.length; i++) {
-        value += md5.charCodeAt(i) * (i + 1);
+    let usedKeys = JSON.parse(localStorage.getItem("usedKeys") || "[]");
+    let countdownInterval = null;
+
+    function login() {
+      const key = document.getElementById("accessKey").value.trim();
+      if (!keyStore[key]) {
+        alert("Key không hợp lệ!");
+        return;
       }
-      value %= 1000;
-      let tai_ratio = value / 1000;
-      tai_ratio = Math.min(1, Math.max(0, tai_ratio + factor));
-      let xiu_ratio = 1 - tai_ratio;
-      return [+(tai_ratio * 100).toFixed(2), +(xiu_ratio * 100).toFixed(2)];
+
+      if (usedKeys.includes(key)) {
+        alert("Key đã được sử dụng hoặc hết hạn. Liên hệ admin!");
+        return;
+      }
+
+      const storedExpiry = localStorage.getItem("loginExpiry");
+      let expiry;
+
+      if (!storedExpiry) {
+        const now = Date.now();
+        const duration = keyStore[key].duration;
+        expiry = duration ? now + duration : "infinite";
+        localStorage.setItem("loginExpiry", expiry);
+      } else {
+        expiry = storedExpiry;
+      }
+
+      localStorage.setItem("loginKey", key);
+      showApp();
     }
 
-    function parse_features(str) {
-      let nums = str.match(/\d+/g);
-      if (!nums || nums.length < 3) return [0, 0, 0];
-      nums = nums.map(Number);
-      let sum = nums[0] + nums[1] + nums[2];
-      let even_ratio = [nums[0], nums[1], nums[2]].filter(n => n % 2 === 0).length / 3;
-      let trend = (nums[1] > nums[0] && nums[2] > nums[1]) ? 1 : -1;
-      return [sum, even_ratio, trend];
-    }
+    function logout() {
+      clearInterval(countdownInterval);
+      const key = localStorage.getItem("loginKey");
+      const expiry = localStorage.getItem("loginExpiry");
 
-    function adjust_prediction_factor(history, ws, sum, even, trend) {
-      let adj = 0;
-      if (history.length >= 3) {
-        let p = history.slice(-3).join('');
-        if (p === "tảitảitài" || p === "xỉuxỉuxỉu") {
-          adj += 0.1 * (p.startsWith('t') ? -1 : 1);
+      if (expiry !== "infinite" && Date.now() > parseInt(expiry)) {
+        if (!usedKeys.includes(key)) {
+          usedKeys.push(key);
+          localStorage.setItem("usedKeys", JSON.stringify(usedKeys));
         }
       }
-      if (even > 0.6) adj += 0.05;
-      else if (even < 0.4) adj -= 0.05;
-      if (sum >= 9 && sum <= 12) adj += 0.03 * trend;
-      if (ws >= 3) adj *= 1.5;
-      else if (ws === 2) adj *= 1.2;
-      return Math.max(-0.2, Math.min(0.2, adj));
+
+      localStorage.removeItem("loginKey");
+      document.getElementById("loginSection").style.display = "block";
+      document.getElementById("mainApp").style.display = "none";
     }
 
-    function solveMD5() {
-      let md5 = document.getElementById("md5Input").value.trim();
-      if (!md5) return alert("Vui lòng nhập mã MD5");
-      [lastTai, lastXiu] = analyze_md5(md5, adjustmentFactor);
-      let diff = Math.abs(lastTai - lastXiu);
-      lastPrediction = (diff < 5 && history.length > 0) ? history[history.length - 1] : (lastTai > lastXiu ? "tài" : "xỉu");
+    function showApp() {
+      const key = localStorage.getItem("loginKey");
+      const expiry = localStorage.getItem("loginExpiry");
 
-      document.getElementById("md5Info").innerHTML =
-        `Tỷ lệ Tài: <b>${lastTai}%</b><br>Tỷ lệ Xỉu: <b>${lastXiu}%</b><br>Dự đoán: <b>${lastPrediction.toUpperCase()}</b>`;
-      document.getElementById("step2").classList.remove("hidden");
-      document.getElementById("output").innerHTML = '';
-    }
-
-    function analyze() {
-      let actual = document.getElementById("actualResult").value.trim().toLowerCase();
-      let resultStr = document.getElementById("resultString").value.trim();
-      if (!actual || !resultStr) return alert("Nhập đủ dữ liệu");
-      let [sum, even, trend] = parse_features(resultStr);
-      let actual_sum_result = sum >= 11 ? "tài" : "xỉu";
-
-      total++;
-      let msg = '';
-      if (actual === lastPrediction && actual === actual_sum_result) {
-        correct++; wrongStreak = 0;
-        msg = "✅ Phân tích chính xác!";
-      } else {
-        wrongStreak++;
-        msg = "❌ Phân tích sai!";
+      if (!key || (expiry !== "infinite" && Date.now() > parseInt(expiry))) {
+        return logout();
       }
-      history.push(actual);
-      if (history.length > 10) history.shift();
-      adjustmentFactor = adjust_prediction_factor(history, wrongStreak, sum, even, trend);
-      let accuracy = ((correct / total) * 100).toFixed(2);
 
-      document.getElementById("output").innerHTML =
-        `🎯 Độ chính xác: <b>${accuracy}%</b><br>⚙️ Hệ số điều chỉnh: <b>${adjustmentFactor.toFixed(3)}</b><br>${msg}`;
+      document.getElementById("loginSection").style.display = "none";
+      document.getElementById("mainApp").style.display = "block";
+
+      if (expiry === "infinite") {
+        document.getElementById("expiryInfo").innerText = "Key: Vĩnh viễn";
+      } else {
+        updateCountdown();
+        countdownInterval = setInterval(updateCountdown, 1000);
+      }
     }
+
+    function updateCountdown() {
+      const expiry = parseInt(localStorage.getItem("loginExpiry"));
+      const now = Date.now();
+      let timeLeft = expiry - now;
+
+      if (timeLeft <= 0) {
+        document.getElementById("expiryInfo").innerText = "Hết hạn!";
+        logout();
+        return;
+      }
+
+      const hours = Math.floor(timeLeft / 3600000);
+      const minutes = Math.floor((timeLeft % 3600000) / 60000);
+      const seconds = Math.floor((timeLeft % 60000) / 1000);
+
+      document.getElementById("expiryInfo").innerText =
+        `Còn lại: ${hours} giờ ${minutes} phút ${seconds} giây`;
+    }
+
+    function traCuuMD5() {
+      const input = document.getElementById("md5Input").value.trim().toLowerCase();
+      const { dice, sum, result } = duDoanTaiXiu(input);
+
+      document.getElementById("result").innerText = result.toUpperCase();
+      document.getElementById("dice").innerHTML = dice.map(toDiceEmoji).join(' ');
+    }
+
+    function duDoanTaiXiu(md5) {
+      const binaryStr = hexToBinary(md5);
+      const values = [];
+      for (let i = 0; i < binaryStr.length; i += 4) {
+        const chunk = binaryStr.substr(i, 4);
+        values.push(parseInt(chunk, 2));
+      }
+      const dice = [
+        (values[0] % 6) + 1,
+        (values[1] % 6) + 1,
+        (values[2] % 6) + 1
+      ];
+      const sum = dice.reduce((a, b) => a + b, 0);
+      const result = sum >= 11 ? "Tài" : "Xỉu";
+      return { dice, sum, result };
+    }
+
+    function hexToBinary(hex) {
+      return hex.split('').map(h => parseInt(h, 16).toString(2).padStart(4, '0')).join('');
+    }
+
+    function toDiceEmoji(number) {
+      const emojis = ['⚀','⚁','⚂','⚃','⚄','⚅'];
+      return emojis[number - 1] || '?';
+    }
+
+    window.onload = showApp;
   </script>
 </body>
 </html>
