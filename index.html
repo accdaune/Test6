@@ -1,141 +1,120 @@
+
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Trang Demo</title>
-<style>
-    body {
-        margin: 0;
-        font-family: Arial, sans-serif;
-        background: #f2f2f2;
-    }
-    .header {
-        background: linear-gradient(135deg, #4c6ef5, #7950f2);
-        color: #fff;
-        padding: 20px;
-        text-align: center;
-        font-size: 24px;
-        font-weight: bold;
-    }
-    .container {
-        max-width: 500px;
-        margin: 40px auto;
-        background: #fff;
-        padding: 20px;
-        border-radius: 12px;
-        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
-    }
-    .input {
-        width: 100%;
-        padding: 12px;
-        margin-top: 10px;
-        border-radius: 8px;
-        border: 1px solid #ccc;
-        font-size: 16px;
-    }
-    .btn {
-        width: 100%;
-        margin-top: 15px;
-        padding: 12px;
-        background: #4c6ef5;
-        color: #fff;
-        border: none;
-        font-size: 18px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: 0.2s;
-    }
-    .btn:hover {
-        background: #3b5bdb;
-    }
-    .result {
-        margin-top: 20px;
-        font-size: 18px;
-        padding: 12px;
-        background: #e9ecef;
-        border-radius: 8px;
-    }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Tên và Mật Khẩu</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            font-size: 16px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            background: #e9ecef;
+            color: #333;
+            display: none;
+            font-size: 16px;
+        }
+    </style>
 </head>
 <body>
-    <div class="header">Giao Diện Demo</div>
-
     <div class="container">
-        <input id="inp" class="input" placeholder="Nhập gì đó..." />
-        <button class="btn" onclick="show()">Tạo</button>
-        <div id="kq" class="result" style="display:none"></div>
+        <h2>Tạo Tên và Mật Khẩu</h2>
+
+        <input id="username" class="input-field" placeholder="Tên hợp lệ" readonly />
+        <button class="btn" onclick="generateUsername()">Tạo Tên</button>
+
+        <input id="password" class="input-field" placeholder="Mật khẩu" readonly />
+        <button class="btn" onclick="generatePassword()">Tạo Mật Khẩu</button>
+
+        <div id="resultMessage" class="result"></div>
     </div>
 
-<script>
-function show(){
-    let v = document.getElementById("inp").value.trim();
-    if(!v){ return; }
-    document.getElementById("kq").style.display="block";
-    document.getElementById("kq").innerText = "Kết quả: " + v;
-}
-</script>
+    <script>
+        const bannedWords = ["roblox", "blox", "admin", "mod", "owner", "staff", "sex", "fuck", "nsfw"];
+
+        function isUsernameValid(name) {
+            if (name.length < 3 || name.length > 20) return false;
+            if (!/^[A-Za-z0-9]+$/.test(name)) return false;
+            const lower = name.toLowerCase();
+            return !bannedWords.some(word => lower.includes(word));
+        }
+
+        function generateUsername() {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+            for (let i = 0; i < 5000; i++) {
+                const length = Math.floor(Math.random() * 9) + 4;
+                let username = "";
+                for (let j = 0; j < length; j++) {
+                    username += characters[Math.floor(Math.random() * characters.length)];
+                }
+                if (isUsernameValid(username)) {
+                    document.getElementById("username").value = username;
+                    showMessage("Tên đã tạo: " + username);
+                    return;
+                }
+            }
+        }
+
+        function generatePassword() {
+            const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            let password = "";
+            for (let i = 0; i < 14; i++) {
+                password += characters[Math.floor(Math.random() * characters.length)];
+            }
+            document.getElementById("password").value = password;
+            showMessage("Mật khẩu đã tạo: " + password);
+        }
+
+        function showMessage(message) {
+            const resultDiv = document.getElementById("resultMessage");
+            resultDiv.innerText = message;
+            resultDiv.style.display = "block";
+        }
+    </script>
 </body>
 </html>
-
-<!-- Generate Username & Password Section -->
-<div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-2xl rounded-2xl space-y-6">
-  <h2 class="text-2xl font-bold text-center">Tạo Tên & Mật Khẩu</h2>
-
-  <!-- Username Box -->
-  <div class="space-y-2">
-    <label class="font-semibold">Tên hợp lệ Roblox</label>
-    <div class="flex gap-2">
-      <input id="username" class="w-full border p-2 rounded-xl" readonly>
-      <button onclick="copy('username')" class="px-3 py-2 bg-black text-white rounded-xl">Copy</button>
-    </div>
-    <button onclick="genUser()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo tên</button>
-  </div>
-
-  <!-- Password Box -->
-  <div class="space-y-2">
-    <label class="font-semibold">Mật khẩu mạnh</label>
-    <div class="flex gap-2">
-      <input id="password" class="w-full border p-2 rounded-xl" readonly>
-      <button onclick="copy('password')" class="px-3 py-2 bg-black text-white rounded-xl">Copy</button>
-    </div>
-    <button onclick="genPass()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo mật khẩu</button>
-  </div>
-</div>
-
-<script>
-const banned = ["roblox","blox","admin","mod","owner","staff","sex","fuck","nsfw"];
-
-function valid(name){
-  if(name.length < 3 || name.length > 20) return false;
-  if(!/^[A-Za-z0-9]+$/.test(name)) return false;
-  let lower = name.toLowerCase();
-  return !banned.some(w => lower.includes(w));
-}
-
-function genUser(){
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-  for(let i=0;i<5000;i++){
-    let len = Math.floor(Math.random()*9)+4;
-    let t = "";
-    for(let j=0;j<len;j++) t += chars[Math.floor(Math.random()*chars.length)];
-    if(valid(t)){
-      document.getElementById("username").value = t;
-      return;
-    }
-  }
-}
-
-function genPass(){
-  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
-  let out = "";
-  for(let i=0;i<14;i++) out += chars[Math.floor(Math.random()*chars.length)];
-  document.getElementById("password").value = out;
-}
-
-function copy(id){
-  let v = document.getElementById(id);
-  v.select();
-  navigator.clipboard.writeText(v.value);
-}
-</script>
