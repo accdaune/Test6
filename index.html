@@ -1,225 +1,126 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!DOCTYPE html><html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Đăng Nhập Tài Xỉu</title>
-  <style>
-    * { box-sizing: border-box; }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Trang Demo</title>
+<style>
     body {
-      margin: 0;
-      background-color: #111;
-      color: #fff;
-      font-family: Arial, sans-serif;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+    }
+    .header {
+        background: linear-gradient(135deg, #4c6ef5, #7950f2);
+        color: #fff;
+        padding: 20px;
+        text-align: center;
+        font-size: 24px;
+        font-weight: bold;
     }
     .container {
-      width: 90%;
-      max-width: 400px;
-      padding: 20px;
-      background-color: #1e1e1e;
-      border: 3px solid #00ffcc;
-      border-radius: 16px;
-      box-shadow: 0 0 25px #00ffcc;
-      text-align: center;
+        max-width: 500px;
+        margin: 40px auto;
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
     }
-    h2 {
-      color: #00ffcc;
-      margin-bottom: 20px;
+    .input {
+        width: 100%;
+        padding: 12px;
+        margin-top: 10px;
+        border-radius: 8px;
+        border: 1px solid #ccc;
+        font-size: 16px;
     }
-    input {
-      padding: 12px;
-      width: 100%;
-      font-size: 16px;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background-color: #222;
-      color: #eee;
-      margin-bottom: 10px;
+    .btn {
+        width: 100%;
+        margin-top: 15px;
+        padding: 12px;
+        background: #4c6ef5;
+        color: #fff;
+        border: none;
+        font-size: 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: 0.2s;
     }
-    button {
-      padding: 12px;
-      width: 100%;
-      font-size: 16px;
-      border: none;
-      background-color: #00ffcc;
-      color: #000;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      margin-top: 5px;
-    }
-    button:hover {
-      background-color: #00ddb8;
-    }
-    .dice {
-      font-size: 50px;
-      margin: 20px 0 10px;
+    .btn:hover {
+        background: #3b5bdb;
     }
     .result {
-      font-size: 40px;
-      font-weight: bold;
-      color: #ffcc00;
-      text-shadow: 0 0 10px #ffcc00;
+        margin-top: 20px;
+        font-size: 18px;
+        padding: 12px;
+        background: #e9ecef;
+        border-radius: 8px;
     }
-    #mainApp {
-      margin-top: 15px;
-    }
-  </style>
+</style>
 </head>
 <body>
-  <div class="container">
-    <h2>@NgMinhChi</h2>
+    <div class="header">Giao Diện Demo</div><div class="container">
+    <input id="inp" class="input" placeholder="Nhập gì đó..." />
+    <button class="btn" onclick="show()">Tạo</button>
+    <div id="kq" class="result" style="display:none"></div>
+</div>
 
-    <div id="loginSection">
-      <input type="text" id="accessKey" placeholder="Nhập key truy cập" />
-      <button onclick="login()">Đăng Nhập</button>
+<script>
+function show(){
+    let v = document.getElementById("inp").value.trim();
+    if(!v){ return; }
+    document.getElementById("kq").style.display="block";
+    document.getElementById("kq").innerText = "Kết quả: " + v;
+}
+</script></body>
+</html><!-- Generate Username & Password Section --><div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-2xl rounded-2xl space-y-6">
+  <h2 class="text-2xl font-bold text-center">Tạo Tên & Mật Khẩu</h2>  <!-- Username Box -->  <div class="space-y-2">
+    <label class="font-semibold">Tên hợp lệ Roblox</label>
+    <div class="flex gap-2">
+      <input id="username" class="w-full border p-2 rounded-xl" readonly>
+      <button onclick="copy('username')" class="px-3 py-2 bg-black text-white rounded-xl">Copy</button>
     </div>
-
-    <div id="mainApp" style="display: none;">
-      <h2>Hệ Thống Tài Xỉu</h2>
-      <input type="text" id="md5Input" placeholder="Nhập chuỗi MD5" />
-      <button onclick="traCuuMD5()">Dự Đoán</button>
-      <div class="dice" id="dice"></div>
-      <div class="result" id="result"></div>
-      <p id="expiryInfo"></p>
-      <button onclick="logout()">Đăng Xuất</button>
+    <button onclick="genUser()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo tên</button>
+  </div>  <!-- Password Box -->  <div class="space-y-2">
+    <label class="font-semibold">Mật khẩu mạnh</label>
+    <div class="flex gap-2">
+      <input id="password" class="w-full border p-2 rounded-xl" readonly>
+      <button onclick="copy('password')" class="px-3 py-2 bg-black text-white rounded-xl">Copy</button>
     </div>
+    <button onclick="genPass()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo mật khẩu</button>
   </div>
+</div><script>
+const banned = ["roblox","blox","admin","mod","owner","staff","sex","fuck","nsfw"];
 
-  <script>
-    const keyStore = {
-      "keytest": { duration: 2 * 60 * 60 * 1000, name: "2 giờ" },
-      "key1daymchi": { duration: 24 * 60 * 60 * 1000, name: "1 ngày" },
-      "keylo1tuan": { duration: 7 * 24 * 60 * 60 * 1000, name: "1 tuần" },
-      "keyvinhvien": { duration: null, name: "Vĩnh viễn" }
-    };
+function valid(name){
+  if(name.length < 3 || name.length > 20) return false;
+  if(!/^[A-Za-z0-9]+$/.test(name)) return false;
+  let lower = name.toLowerCase();
+  return !banned.some(w => lower.includes(w));
+}
 
-    let usedKeys = JSON.parse(localStorage.getItem("usedKeys") || "[]");
-    let countdownInterval = null;
-
-    function login() {
-      const key = document.getElementById("accessKey").value.trim();
-      if (!keyStore[key]) {
-        alert("Key không hợp lệ!");
-        return;
-      }
-
-      if (usedKeys.includes(key)) {
-        alert("Key đã được sử dụng hoặc hết hạn. Liên hệ admin!");
-        return;
-      }
-
-      const storedExpiry = localStorage.getItem("loginExpiry");
-      let expiry;
-
-      if (!storedExpiry) {
-        const now = Date.now();
-        const duration = keyStore[key].duration;
-        expiry = duration ? now + duration : "infinite";
-        localStorage.setItem("loginExpiry", expiry);
-      } else {
-        expiry = storedExpiry;
-      }
-
-      localStorage.setItem("loginKey", key);
-      showApp();
+function genUser(){
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  for(let i=0;i<5000;i++){
+    let len = Math.floor(Math.random()*9)+4;
+    let t = "";
+    for(let j=0;j<len;j++) t += chars[Math.floor(Math.random()*chars.length)];
+    if(valid(t)){
+      document.getElementById("username").value = t;
+      return;
     }
+  }
+}
 
-    function logout() {
-      clearInterval(countdownInterval);
-      const key = localStorage.getItem("loginKey");
-      const expiry = localStorage.getItem("loginExpiry");
+function genPass(){
+  const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+  let out = "";
+  for(let i=0;i<14;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  document.getElementById("password").value = out;
+}
 
-      if (expiry !== "infinite" && Date.now() > parseInt(expiry)) {
-        if (!usedKeys.includes(key)) {
-          usedKeys.push(key);
-          localStorage.setItem("usedKeys", JSON.stringify(usedKeys));
-        }
-      }
-
-      localStorage.removeItem("loginKey");
-      document.getElementById("loginSection").style.display = "block";
-      document.getElementById("mainApp").style.display = "none";
-    }
-
-    function showApp() {
-      const key = localStorage.getItem("loginKey");
-      const expiry = localStorage.getItem("loginExpiry");
-
-      if (!key || (expiry !== "infinite" && Date.now() > parseInt(expiry))) {
-        return logout();
-      }
-
-      document.getElementById("loginSection").style.display = "none";
-      document.getElementById("mainApp").style.display = "block";
-
-      if (expiry === "infinite") {
-        document.getElementById("expiryInfo").innerText = "Key: Vĩnh viễn";
-      } else {
-        updateCountdown();
-        countdownInterval = setInterval(updateCountdown, 1000);
-      }
-    }
-
-    function updateCountdown() {
-      const expiry = parseInt(localStorage.getItem("loginExpiry"));
-      const now = Date.now();
-      let timeLeft = expiry - now;
-
-      if (timeLeft <= 0) {
-        document.getElementById("expiryInfo").innerText = "Hết hạn!";
-        logout();
-        return;
-      }
-
-      const hours = Math.floor(timeLeft / 3600000);
-      const minutes = Math.floor((timeLeft % 3600000) / 60000);
-      const seconds = Math.floor((timeLeft % 60000) / 1000);
-
-      document.getElementById("expiryInfo").innerText =
-        `Còn lại: ${hours} giờ ${minutes} phút ${seconds} giây`;
-    }
-
-    function traCuuMD5() {
-      const input = document.getElementById("md5Input").value.trim().toLowerCase();
-      const { dice, sum, result } = duDoanTaiXiu(input);
-
-      document.getElementById("result").innerText = result.toUpperCase();
-      document.getElementById("dice").innerHTML = dice.map(toDiceEmoji).join(' ');
-    }
-
-    function duDoanTaiXiu(md5) {
-      const binaryStr = hexToBinary(md5);
-      const values = [];
-      for (let i = 0; i < binaryStr.length; i += 4) {
-        const chunk = binaryStr.substr(i, 4);
-        values.push(parseInt(chunk, 2));
-      }
-      const dice = [
-        (values[0] % 6) + 1,
-        (values[1] % 6) + 1,
-        (values[2] % 6) + 1
-      ];
-      const sum = dice.reduce((a, b) => a + b, 0);
-      const result = sum >= 11 ? "Tài" : "Xỉu";
-      return { dice, sum, result };
-    }
-
-    function hexToBinary(hex) {
-      return hex.split('').map(h => parseInt(h, 16).toString(2).padStart(4, '0')).join('');
-    }
-
-    function toDiceEmoji(number) {
-      const emojis = ['⚀','⚁','⚂','⚃','⚄','⚅'];
-      return emojis[number - 1] || '?';
-    }
-
-    window.onload = showApp;
-  </script>
-</body>
-</html>
+function copy(id){
+  let v = document.getElementById(id);
+  v.select();
+  navigator.clipboard.writeText(v.value);
+}
+</script>
