@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="vi">
+<!DOCTYPE html>
+<html lang="vi">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -58,11 +59,13 @@
 </style>
 </head>
 <body>
-    <div class="header">Giao Diện Demo</div><div class="container">
-    <input id="inp" class="input" placeholder="Nhập gì đó..." />
-    <button class="btn" onclick="show()">Tạo</button>
-    <div id="kq" class="result" style="display:none"></div>
-</div>
+    <div class="header">Giao Diện Demo</div>
+
+    <div class="container">
+        <input id="inp" class="input" placeholder="Nhập gì đó..." />
+        <button class="btn" onclick="show()">Tạo</button>
+        <div id="kq" class="result" style="display:none"></div>
+    </div>
 
 <script>
 function show(){
@@ -71,16 +74,26 @@ function show(){
     document.getElementById("kq").style.display="block";
     document.getElementById("kq").innerText = "Kết quả: " + v;
 }
-</script></body>
-</html><!-- Generate Username & Password Section --><div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-2xl rounded-2xl space-y-6">
-  <h2 class="text-2xl font-bold text-center">Tạo Tên & Mật Khẩu</h2>  <!-- Username Box -->  <div class="space-y-2">
+</script>
+</body>
+</html>
+
+<!-- Generate Username & Password Section -->
+<div class="max-w-lg mx-auto mt-10 p-6 bg-white shadow-2xl rounded-2xl space-y-6">
+  <h2 class="text-2xl font-bold text-center">Tạo Tên & Mật Khẩu</h2>
+
+  <!-- Username Box -->
+  <div class="space-y-2">
     <label class="font-semibold">Tên hợp lệ Roblox</label>
     <div class="flex gap-2">
       <input id="username" class="w-full border p-2 rounded-xl" readonly>
       <button onclick="copy('username')" class="px-3 py-2 bg-black text-white rounded-xl">Copy</button>
     </div>
     <button onclick="genUser()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo tên</button>
-  </div>  <!-- Password Box -->  <div class="space-y-2">
+  </div>
+
+  <!-- Password Box -->
+  <div class="space-y-2">
     <label class="font-semibold">Mật khẩu mạnh</label>
     <div class="flex gap-2">
       <input id="password" class="w-full border p-2 rounded-xl" readonly>
@@ -88,7 +101,9 @@ function show(){
     </div>
     <button onclick="genPass()" class="w-full py-2 bg-gray-800 text-white rounded-xl">Tạo mật khẩu</button>
   </div>
-</div><script>
+</div>
+
+<script>
 const banned = ["roblox","blox","admin","mod","owner","staff","sex","fuck","nsfw"];
 
 function valid(name){
