@@ -116,7 +116,7 @@
         function generatePassword() {
             const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
             let password = "";
-            for (let i = 0; i < 14; i++) {
+            for (let i = 0; i < 20; i++) {
                 password += characters[Math.floor(Math.random() * characters.length)];
             }
             document.getElementById("password").value = password;
