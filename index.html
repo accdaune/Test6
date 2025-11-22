@@ -26,15 +26,15 @@
         .input-field {
             width: 100%;
             padding: 15px;
-            border: 2px solid #007bff; /* Biên bao quanh input */
+            border: 2px solid #007bff; /* Viền của ô nhập */
             border-radius: 8px;
-            margin-bottom: 20px; /* Giữa các phần */
+            margin-bottom: 20px; /* Khoảng cách giữa các phần */
             font-size: 18px;
             transition: border-color 0.3s; /* Hiệu ứng khi focus */
         }
         .input-field:focus {
-            border-color: #0056b3; /* Thay đổi màu biên khi focus */
-            outline: none; /* Bỏ viền ngoài */
+            border-color: #0056b3; /* Màu viền khi focus */
+            outline: none;
         }
         .btn {
             width: 100%;
@@ -45,11 +45,18 @@
             border-radius: 8px;
             cursor: pointer;
             transition: background-color 0.3s;
-            font-size: 20px; /* Chữ lớn hơn */
+            font-size: 20px; /* Kích thước chữ lớn hơn */
             margin-bottom: 10px; /* Khoảng cách giữa các nút */
         }
         .btn:hover {
-            background-color: #0056b3; /* Màu nút khi hover */
+            background-color: #0056b3; /* Nút khi hover */
+        }
+        .copy-btn {
+            background-color: #28a745; /* Màu nút Copy */
+            margin-top: 10px; /* Khoảng cách giữa các nút */
+        }
+        .copy-btn:hover {
+            background-color: #218838; /* Màu khi hover */
         }
         .result {
             margin-top: 20px;
@@ -68,10 +75,12 @@
 
         <input id="username" class="input-field" placeholder="Tên hợp lệ" readonly />
         <button class="btn" onclick="generateUsername()">Tạo Tên</button>
+        <button class="copy-btn" onclick="copyToClipboard('username')">Sao chép Tên</button>
 
         <input id="password" class="input-field" placeholder="Mật khẩu" readonly />
         <button class="btn" onclick="generatePassword()">Tạo Mật Khẩu</button>
-
+        <button class="copy-btn" onclick="copyToClipboard('password')">Sao chép Mật Khẩu</button>
+        
         <div id="resultMessage" class="result"></div>
     </div>
 
@@ -95,7 +104,7 @@
                 }
                 if (isUsernameValid(username)) {
                     document.getElementById("username").value = username;
-                    showMessage("Tên đã tạo: " + username);
+                    showMessage(username);
                     return;
                 }
             }
@@ -108,13 +117,20 @@
                 password += characters[Math.floor(Math.random() * characters.length)];
             }
             document.getElementById("password").value = password;
-            showMessage("Mật khẩu đã tạo: " + password);
+            showMessage(password);
         }
 
-        function showMessage(message) {
+        function showMessage(value) {
             const resultDiv = document.getElementById("resultMessage");
-            resultDiv.innerText = message;
+            resultDiv.innerText = value; // Hiển thị giá trị đã tạo
             resultDiv.style.display = "block"; // Hiện thông báo
+        }
+
+        function copyToClipboard(fieldId) {
+            const inputField = document.getElementById(fieldId);
+            inputField.select();
+            document.execCommand("copy"); // Sao chép nội dung
+            alert(fieldId === 'username' ? "Đã sao chép tên người dùng!" : "Đã sao chép mật khẩu!"); // Thông báo sao chép
         }
     </script>
 </body>
